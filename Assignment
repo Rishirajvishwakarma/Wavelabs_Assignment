@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class NetworkEngineer {
+    void dfs(vector<int> adj[], vector<bool> &visited, int src)
+    {
+        visited[src] = true;
+        for(int i : adj[src]){
+            if(!visited[i]){
+                dfs(adj, visited, i);
+            }
+        }
+    }
+public:
+    int minCablesToConnectAll(int n, vector<vector<int>>& connections) {
+        int len = connections.size();
+        if(len<n-1) return -1;
+        vector<int> adj[n];
+        for(auto v : connections)
+        {
+            adj[v[0]].push_back(v[1]);
+            adj[v[1]].push_back(v[0]);
+        }
+        vector<bool> visited(n, false);
+        int ans = 0;
+        for(int i=0; i<n; i++)
+            if(!visited[i])
+            {
+                dfs(adj, visited, i);
+                ans++;
+            }
+        return ans - 1;
+    }
+};
+
+int main()
+{
+    int n = 4;
+    vector<vector<int>> connections{{0,1},{0,2},{1,2}};
+    NetworkEngineer ne;
+    int minCables = ne.minCablesToConnectAll(n, connections);
+    cout << minCables << endl;
+
+    return 0;
+}
